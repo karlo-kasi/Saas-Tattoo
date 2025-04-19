@@ -4,8 +4,6 @@ const routes = require("./routes/authRoute")
 
 const app = express()
 
-
-
 app.use(cors({
     origin: "http://localhost:5173"
 }))

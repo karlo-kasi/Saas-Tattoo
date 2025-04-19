@@ -7,11 +7,14 @@ const {getClienti} = require("../controllers/clientiStudio/clientiControllers")
 const {newClient} = require("../controllers/clientiStudio/newClientController")
 const {modifyClient} = require("../controllers/clientiStudio/modifyController")
 const {deleteClient} = require("../controllers/clientiStudio/deleteController")
+const {showStudio} = require("../controllers/showStudioContorller")
 
 
 router.post("/register", registerStudio)
 
 router.post("/login", loginStudio)
+
+router.get("/user/", verificaToken, showStudio)
 
 
 // rotte per i clienti dello studio
@@ -22,5 +25,6 @@ router.post("/newclient", verificaToken, newClient)
 router.put("/modifyclient/:id", verificaToken, modifyClient)
 
 router.delete("/deleteclient/:id", verificaToken, deleteClient)
+
 
 module.exports = router;
