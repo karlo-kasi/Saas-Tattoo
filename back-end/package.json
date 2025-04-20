@@ -5,7 +5,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js",
-    "watch": "node --env-file=.env --watch app.js"
+    "watch": "node --env-file=.env --watch app.js",
+    "seed": "node prisma/seed.js"
   },
   "author": "",
   "license": "ISC",

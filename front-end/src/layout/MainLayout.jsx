@@ -19,7 +19,7 @@ export default function MainLayout() {
         <Navbar />
 
         {/* Contenuto con padding dinamico a sinistra */}
-        <main className={`transition-all duration-300 px-6 pt-6 ${isSidebarOpen ? "ml-64" : "ml-20"}`}>
+        <main className={`transition-all duration-300 px-3 pt-16 bg-[#F9FAFB] ${isSidebarOpen ? "ml-64" : "ml-20"} h-screen overflow-y-auto`}>
           <Outlet />
         </main>
       </div>

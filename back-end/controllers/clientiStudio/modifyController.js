@@ -51,8 +51,9 @@ const modifyClient = async (req, res) => {
         // Risposta di successo
         res.status(200).json({
             message: "Modifiche fatte",
-            clienteModificato
-        })
+            cliente: clienteModificato
+          })
+          
 
     } catch (err) {
         console.log(`Errore : ${err}`)

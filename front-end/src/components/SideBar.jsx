@@ -18,7 +18,7 @@ export default function Sidebar({ isOpen, setIsOpen }) {
 
 
     return (
-        <aside className={`h-screen bg-indigo-700 text-white fixed flex flex-col justify-between transition-all duration-300 ${isOpen ? 'w-64' : 'w-20'}`}>
+        <aside className={`fixed top-0 left-0 z-20 h-screen bg-indigo-700 text-white fixed flex flex-col justify-between transition-all duration-300 ${isOpen ? 'w-64' : 'w-20'}`}>
 
             {/* Contenuto top */}
             <div>

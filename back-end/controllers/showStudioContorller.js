@@ -4,11 +4,10 @@ const prisma = require("../prisma/client");
 const showStudio = async (req, res) => {
   try {
     const studioId = req.user.id;
+    console.log(studioId)
 
     const studio = await prisma.studio.findUnique({
-      where: {
-        id: studioId,
-      },
+      where: { id: studioId },
       select: {
         id: true,
         nome: true,
@@ -27,4 +26,4 @@ const showStudio = async (req, res) => {
   }
 };
 
-module.exports = {showStudio};
+module.exports = { showStudio };

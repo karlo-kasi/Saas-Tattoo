@@ -1,6 +1,10 @@
+import DashboardOverview from "../components/DashboardOverview"
 
-export default function Dashboard(){
-    return(
-        <h1>Sono la Dashboard</h1>
+export default function Dashboard() {
+    return (
+      <div className="p-6">
+        <DashboardOverview />
+        {/* Qui possiamo mettere i grafici, attività recenti, ecc. */}
+      </div>
     )
-}
+  }

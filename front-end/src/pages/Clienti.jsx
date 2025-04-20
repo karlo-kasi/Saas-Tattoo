@@ -1,9 +1,19 @@
 import { useState, useEffect } from "react"
 import axios from "axios"
 
+//componenti
+import AddClienteModal from "../components/AddClienteModal"
+import EditClienteModal from "../components/EditClienteModal";
+
+
 export default function Clienti() {
 
     const [clienti, setClienti] = useState([])
+    const [modalOpen, setModalOpen] = useState(false)
+    const [successMsg, setSuccessMsg] = useState("")
+    const [editModalOpen, setEditModalOpen] = useState(false);
+    const [clienteSelezionato, setClienteSelezionato] = useState(null);
+
 
     useEffect(() => {
         const token = localStorage.getItem("token")
@@ -17,6 +27,25 @@ export default function Clienti() {
             .then(console.log(clienti))
     }, [])
 
+    const handleDelete = async (id) => {
+        try {
+
+            const token = localStorage.getItem("token");
+
+            await axios.delete(`http://localhost:3000/api/app/deleteclient/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            // Rimuove il cliente dallo stato
+            setClienti((prev) => prev.filter((c) => c.id !== id));
+
+        } catch (err) {
+            console.error("Errore durante l'eliminazione:", err);
+        }
+    }
+
 
     return (
         <div className="p-6">
@@ -25,13 +54,20 @@ export default function Clienti() {
                 <div className="flex items-center justify-between mb-6">
                     <div>
                         <h2 className="text-xl font-semibold text-gray-800">Clienti</h2>
-                        
+
                     </div>
-                    <button className="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm hover:bg-indigo-700 transition">
+
+                    <button onClick={() => setModalOpen(true)} className="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm hover:bg-indigo-700 transitio cursor-pointer">
                         + Aggiungi Cliente
                     </button>
                 </div>
 
+                {/* Messaggio successo */}
+                {successMsg && (
+                    <div className="mb-4 text-green-600 text-sm">
+                        ✅ {successMsg}
+                    </div>
+                )}
                 {/* Table */}
                 <div className="overflow-x-auto">
                     <table className="min-w-full divide-y divide-gray-200 text-sm">
@@ -50,10 +86,19 @@ export default function Clienti() {
                                     <td className="px-6 py-4">{cliente.telefono}</td>
                                     <td className="px-6 py-4">{cliente.email}</td>
                                     <td className="px-6 py-4 text-right flex justify-end gap-2">
-                                        <button className="bg-blue-500 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-600 transition cursor-pointer">
+                                        <button
+                                            className="bg-indigo-500 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-md hover:bg-indigo-600 hover:shadow-lg transition-all cursor-pointer"
+                                            onClick={() => {
+                                                setClienteSelezionato(cliente);
+                                                setEditModalOpen(true);
+                                            }}
+                                        >
                                             Modifica
                                         </button>
-                                        <button className="bg-red-500 text-white px-3 py-1 rounded-md text-sm hover:bg-red-600 transition cursor-pointer">
+                                        <button
+                                            onClick={() => handleDelete(cliente.id)}
+                                            className="bg-red-500 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-md hover:bg-red-600 hover:shadow-lg transition-all cursor-pointer"
+                                        >
                                             Elimina
                                         </button>
                                     </td>
@@ -61,6 +106,28 @@ export default function Clienti() {
                             ))}
                         </tbody>
                     </table>
+
+                    <AddClienteModal
+                        isOpen={modalOpen}
+                        onClose={() => setModalOpen(false)}
+                        onClienteCreato={(nuovoCliente) => {
+                            setClienti((prev) => [...prev, nuovoCliente])
+                            setSuccessMsg("Cliente aggiunto con successo!")
+                            setTimeout(() => setSuccessMsg(""), 3000)
+                        }}
+                    />
+                    <EditClienteModal
+                        isOpen={editModalOpen}
+                        onClose={() => setEditModalOpen(false)}
+                        cliente={clienteSelezionato}
+                        onClienteModificato={(clienteModificato) => {
+                            setClienti((prev) =>
+                                prev.map((c) => (c.id === clienteModificato.id ? clienteModificato : c))
+                            );
+                            setSuccessMsg("Cliente modificato con successo!");
+                            setTimeout(() => setSuccessMsg(""), 3000);
+                        }}
+                    />
                 </div>
             </div>
         </div>

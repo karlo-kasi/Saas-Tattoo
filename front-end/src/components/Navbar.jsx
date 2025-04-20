@@ -33,7 +33,7 @@ export default function Navbar() {
     }, []);
 
     return (
-        <div className="h-16 bg-gray-900 text-white flex items-center justify-end px-6 border-b border-gray-700">
+        <div className="fixed top-0 left-0 w-full z-10 h-16 bg-gray-900 text-white flex items-center justify-end px-6 border-b border-gray-700">
 
 
             {/* Search + Notifiche + Avatar */}

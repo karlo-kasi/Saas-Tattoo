@@ -4,22 +4,115 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql" // Cambia con il tuo database (es. "postgresql", "sqlite")
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
 model Studio {
-  id       Int    @id @default(autoincrement())
-  nome     String
-  email    String @unique
-  password String
-  clienti  Cliente[] // Campo opposto per la relazione con Cliente
+  id          Int          @id @default(autoincrement())
+  nome        String
+  email       String       @unique
+  password    String
+  telefono    String?
+  indirizzo   String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  clienti        Cliente[]
+  utenti         Utente[]
+  servizi        Servizio[]
+  appuntamenti   Appuntamento[]
+}
+
+model Utente {
+  id          Int       @id @default(autoincrement())
+  nome        String
+  email       String    @unique
+  password    String
+  ruolo       Ruolo
+  studioId    Int
+  studio      Studio    @relation(fields: [studioId], references: [id])
+  appuntamenti Appuntamento[] @relation("UtenteAppuntamenti")
 }
 
 model Cliente {
-  id        Int      @id @default(autoincrement())
-  nome      String
-  telefono  String
-  studioId  Int
-  studio    Studio   @relation(fields: [studioId], references: [id])
+  id          Int       @id @default(autoincrement())
+  nome        String
+  telefono    String
+  email       String?
+  note        String?
+  studioId    Int
+  studio      Studio    @relation(fields: [studioId], references: [id])
+  appuntamenti Appuntamento[]
+}
+
+model Servizio {
+  id          Int       @id @default(autoincrement())
+  nome        String
+  prezzo      Float
+  durata      Int       // in minuti
+  studioId    Int
+  studio      Studio    @relation(fields: [studioId], references: [id])
+  appuntamenti Appuntamento[]
+}
+
+model Appuntamento {
+  id            Int         @id @default(autoincrement())
+  data          DateTime
+  durata        Int         // in minuti
+  stato         StatoAppuntamento
+  note          String?
+
+  clienteId     Int
+  cliente       Cliente     @relation(fields: [clienteId], references: [id])
+
+  studioId      Int
+  studio        Studio      @relation(fields: [studioId], references: [id])
+
+  servizioId    Int
+  servizio      Servizio    @relation(fields: [servizioId], references: [id])
+
+  tatuatoreId   Int
+  tatuatore     Utente      @relation("UtenteAppuntamenti", fields: [tatuatoreId], references: [id])
+
+  pagamento     Pagamento?
+}
+
+model Pagamento {
+  id              Int              @id @default(autoincrement())
+  importo         Float
+  metodo          MetodoPagamento
+  stato           StatoPagamento
+  creatoIl        DateTime         @default(now())
+
+  appuntamentoId  Int              @unique
+  appuntamento    Appuntamento     @relation(fields: [appuntamentoId], references: [id])
+}
+
+enum Ruolo {
+  ADMIN
+  TATUATORE
+  COLLABORATORE
+  RECEPTIONIST
+  PIERCER
+  APPRENDISTA
+}
+
+enum StatoAppuntamento {
+  PROGRAMMATO
+  COMPLETATO
+  CANCELLATO
+  NO_SHOW
+}
+
+enum MetodoPagamento {
+  CONTANTI
+  CARTA
+  ONLINE
+}
+
+enum StatoPagamento {
+  PAGATO
+  NON_PAGATO
+  IN_ATTESA
 }

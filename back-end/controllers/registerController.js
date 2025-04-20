@@ -6,6 +6,8 @@ const registerStudio = async (req, res) => {
   try {
     const { nome, email, password } = req.body;
 
+    console.log("Dati ricevuti:", req.body);
+
     // Controlla se esiste già
     const studioEsistente = await prisma.studio.findUnique({
       where: { email },
