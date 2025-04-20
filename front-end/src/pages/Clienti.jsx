@@ -54,6 +54,9 @@ export default function Clienti() {
                 <div className="flex items-center justify-between mb-6">
                     <div>
                         <h2 className="text-xl font-semibold text-gray-800">Clienti</h2>
+                        <p className="text-sm text-gray-600 pt-3">
+                            Totale clienti: <span className="font-semibold text-gray-800">{clienti.length}</span>
+                        </p>
 
                     </div>
 
