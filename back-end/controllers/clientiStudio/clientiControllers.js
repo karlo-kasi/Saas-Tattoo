@@ -1,22 +1,23 @@
-const prisma = require("../../prisma/client");
+const connection = require("../../config/db");
 
 const getClienti = async (req, res) => {
-    try {
-        console.log("Utente autenticato:", req.user); // Log per verificare req.user
-        const studioId = req.user.id;
+  try {
+    console.log("Utente autenticato:", req.user);
+    const studioId = req.user.id_studio;
 
-        console.log("Studio ID:", studioId); // Log per verificare studioId
-        const clienti = await prisma.cliente.findMany({
-            where: { studioId }
-        });
+    console.log("Studio ID:", studioId);
 
-        console.log("Clienti trovati:", clienti); // Log per verificare i risultati
-        res.json(clienti);
-        
-    } catch (err) {
-        console.error("Errore dettagliato:", err.message, err.stack);
-        res.status(500).json({ error: "Errore nel recupero dei clienti" });
-    }
+    const [clienti] = await connection.query(
+      "SELECT * FROM clienti WHERE id_studio = ?",
+      [studioId]
+    );
+
+    console.log("Clienti trovati:", clienti);
+    res.json(clienti);
+  } catch (err) {
+    console.error("Errore dettagliato:", err.message, err.stack);
+    res.status(500).json({ error: "Errore nel recupero dei clienti" });
+  }
 };
 
 module.exports = { getClienti };

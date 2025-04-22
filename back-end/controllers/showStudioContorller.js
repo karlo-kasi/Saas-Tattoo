@@ -1,20 +1,17 @@
 
-const prisma = require("../prisma/client");
+const connection = require("../config/db");
 
 const showStudio = async (req, res) => {
   try {
-    const studioId = req.user.id;
-    console.log(studioId)
+    const studioId = req.user.id_studio; // <-- attenzione: è l'id dello studio, non dell'utente!
+    console.log("Studio ID:", studioId);
 
-    const studio = await prisma.studio.findUnique({
-      where: { id: studioId },
-      select: {
-        id: true,
-        nome: true,
-        email: true,
-        telefono: true
-      },
-    });
+    const [rows] = await connection.query(
+      "SELECT id, nome, email_admin AS email, telefono FROM studi WHERE id = ?",
+      [studioId]
+    );
+
+    const studio = rows[0];
 
     if (!studio) {
       return res.status(404).json({ error: "Studio non trovato" });
@@ -22,7 +19,7 @@ const showStudio = async (req, res) => {
 
     res.json(studio);
   } catch (err) {
-    console.error(err);
+    console.error("Errore durante il recupero dello studio:", err);
     res.status(500).json({ error: "Errore del server" });
   }
 };
