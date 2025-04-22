@@ -44,6 +44,7 @@ model Cliente {
   studioId    Int
   studio      Studio    @relation(fields: [studioId], references: [id])
   appuntamenti Appuntamento[]
+  createdAt DateTime @default(now())
 }
 
 model Servizio {

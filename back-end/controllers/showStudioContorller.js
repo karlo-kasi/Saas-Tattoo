@@ -12,6 +12,7 @@ const showStudio = async (req, res) => {
         id: true,
         nome: true,
         email: true,
+        telefono: true
       },
     });
 
