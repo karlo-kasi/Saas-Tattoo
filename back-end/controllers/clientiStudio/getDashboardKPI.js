@@ -1,64 +1,47 @@
 const connection = require("../../config/db");
 
-const getDashboardKPI = async (req, res) => {
-  try {
-    const { range } = req.query;
-    const studioId = req.user.id_studio;
+const getDashboardKPI = (req, res) => {
+  const studioId = req.user.id_studio;
+  console.log("Studio ID:", studioId);
+  const range = req.query.range || 'all';
+  console.log("Range:", range);
 
-    let fromDate = null;
-    if (range !== "all") {
-      const giorni = parseInt(range.replace("d", ""));
-      fromDate = new Date();
-      fromDate.setHours(0, 0, 0, 0);
-      fromDate.setDate(fromDate.getDate() - giorni);
+  let sql = `
+    SELECT SUM(importo) AS fatturato_totale
+    FROM pagamenti_cliente
+    WHERE id_studio = ? 
+  `;
+  const values = [studioId];
+
+  if (range !== 'all') {
+    const giorni = parseInt(range.replace('d', ''), 10); // Parsing del numero di giorni
+    if (!isNaN(giorni) && giorni > 0) {
+      sql += ` AND data_pagamento >= DATE_SUB(NOW(), INTERVAL ? DAY)`;
+      values.push(giorni);
+    } else {
+      console.error("Range non valido:", range);
+      return res.status(400).json({ error: "Range non valido" });
+    }
+  }
+
+  console.log("SQL Query:", sql);
+  console.log("Valori:", values);
+
+  connection.query(sql, values, (err, results) => {
+    if (err) {
+      console.error("Errore DB:", err);
+      return res.status(500).json({ error: "Errore nel recupero del fatturato" });
     }
 
-    // QUERY: Appuntamenti completati
-    const [appuntamenti] = await connection.query(
-      `
-      SELECT a.id, p.importo
-      FROM appuntamenti a
-      JOIN pagamenti_cliente p ON a.id = p.id_appuntamento
-      WHERE a.id_studio = ?
-        AND p.stato_pagamento = 'completato'
-        ${fromDate ? "AND a.data_appuntamento >= ?" : ""}
-      `,
-      fromDate ? [studioId, fromDate] : [studioId]
-    );
-
-    const numeroAppuntamenti = appuntamenti.length;
-
-    const totaleFatturato = appuntamenti.reduce(
-      (acc, app) => acc + (app.importo || 0),
-      0
-    );
-
-    const spesaMedia =
-      numeroAppuntamenti > 0 ? totaleFatturato / numeroAppuntamenti : 0;
-
-    // QUERY: Clienti creati nel periodo
-    const [clientiResult] = await connection.query(
-      `
-      SELECT COUNT(*) AS totale
-      FROM clienti
-      WHERE id_studio = ?
-      ${fromDate ? "AND data_registrazione >= ?" : ""}
-      `,
-      fromDate ? [studioId, fromDate] : [studioId]
-    );
-
-    const clientiNuovi = clientiResult[0].totale;
-
     res.json({
-      fatturatoTotale: totaleFatturato,
-      appuntamentiCompletati: numeroAppuntamenti,
-      spesaMedia: parseFloat(spesaMedia.toFixed(2)),
-      clientiNuovi,
+      fatturatoTotale: results[0]?.fatturato_totale || 0
     });
-  } catch (error) {
-    console.error("Errore nel recupero dei KPI:", error);
-    res.status(500).json({ error: "Errore nel recupero dei KPI" });
-  }
+  });
+
+  console.log("Query eseguita con successo");
+  
 };
 
-module.exports = { getDashboardKPI };
+module.exports = {
+  getDashboardKPI
+};

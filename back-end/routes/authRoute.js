@@ -7,7 +7,7 @@ const { getClienti } = require("../controllers/clientiStudio/clientiControllers"
 const { newClient } = require("../controllers/clientiStudio/newClientController")
 const { modifyClient } = require("../controllers/clientiStudio/modifyController")
 const { deleteClient } = require("../controllers/clientiStudio/deleteController")
-const { showStudio } = require("../controllers/showStudioContorller")
+const { getMe } = require("../controllers/clientiStudio/showStudioContorller")
 const { getDashboardKPI } = require("../controllers/clientiStudio/getDashboardKPI")
 
 
@@ -15,10 +15,12 @@ router.post("/register", registerStudio)
 
 router.post("/login", loginStudio)
 
-router.get("/user/", verificaToken, showStudio)
+
 
 
 // rotte per i clienti dello studio
+
+router.get("/user/", verificaToken, getMe)
 
 router.get("/kpi", verificaToken, getDashboardKPI)
 

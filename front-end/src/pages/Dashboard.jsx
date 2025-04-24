@@ -17,6 +17,7 @@ export default function Dashboard() {
     
       useEffect(() => {
         const token = localStorage.getItem("token");
+        console.log("Token:", token);
     
         axios
           .get(`http://localhost:3000/api/app/kpi?range=${range}`, {
@@ -31,6 +32,8 @@ export default function Dashboard() {
             console.error("Errore nella richiesta:", err);
           });
       }, [range]);
+
+      console.log("Dati KPI:", kpiData);
     
       return (
         <div className="p-6">

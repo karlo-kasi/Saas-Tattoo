@@ -1,23 +1,28 @@
 const connection = require("../../config/db");
 
-const getClienti = async (req, res) => {
-  try {
-    console.log("Utente autenticato:", req.user);
-    const studioId = req.user.id_studio;
+const getClienti = (req, res) => {
 
-    console.log("Studio ID:", studioId);
+  console.log("Utente autenticato:", req.user);
+  const studioId = req.user?.id_studio;
 
-    const [clienti] = await connection.query(
-      "SELECT * FROM clienti WHERE id_studio = ?",
-      [studioId]
-    );
-
-    console.log("Clienti trovati:", clienti);
-    res.json(clienti);
-  } catch (err) {
-    console.error("Errore dettagliato:", err.message, err.stack);
-    res.status(500).json({ error: "Errore nel recupero dei clienti" });
+  if (!studioId) {
+    return res.status(401).json({ error: "Non autorizzato" });
   }
+
+  sql = "SELECT * FROM clienti WHERE id_studio = ?",
+
+
+    connection.query(sql, [studioId], (err, results) => {
+
+      if (err) {
+        console.error("Errore durante la query:", err);
+        return res.status(500).json({ error: "Errore nel recupero dei clienti" });
+      }
+
+      console.log("Clienti trovati:", results);
+      res.json(results);
+    }
+    );
 };
 
 module.exports = { getClienti };

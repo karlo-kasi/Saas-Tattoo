@@ -19,7 +19,10 @@ export default function Navbar() {
         })
             .then(res => setDati(res.data))
             .catch(err => console.error("Errore nella richiesta:", err));
+        
     }, [])
+
+    console.log("Dati utente:", dati);
 
     // Chiudi dropdown cliccando fuori
     useEffect(() => {
@@ -74,12 +77,7 @@ export default function Navbar() {
                             >
                                 Profilo
                             </a>
-                            <a
-                                href="#"
-                                className="block px-4 py-2 hover:bg-gray-100 transition"
-                            >
-                                Impostazioni
-                            </a>
+                            
                             <button
                                 onClick={() => {
                                     localStorage.removeItem("token");

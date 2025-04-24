@@ -28,7 +28,7 @@ const deleteClient = async (req, res) => {
     }
 
     // Elimina il cliente
-    await connection.query(
+    connection.query(
       "DELETE FROM clienti WHERE id = ? AND id_studio = ?",
       [clienteId, studioId]
     );

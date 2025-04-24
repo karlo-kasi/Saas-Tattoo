@@ -54,6 +54,7 @@ const loginStudio = async (req, res) => {
           email_admin: utente.email_admin,
           indirizzo: utente.indirizzo,
           telefono: utente.telefono,
+          password: password
         },
         token,
       });

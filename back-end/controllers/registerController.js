@@ -45,21 +45,23 @@ const registerStudio = async (req, res) => {
 
           // Crea l'utente admin associato allo studio
           const creaUtenteQuery = `
-            INSERT INTO utenti (nome, email, password_hash, ruolo, id_studio) VALUES (?, ?, ?, ?, ?)
-          `;
+              INSERT INTO utenti (nome, email, password_hash, ruolo, id_studio) VALUES (?, ?, ?, ?, ?)
+               `;
           connection.query(
             creaUtenteQuery,
-            ["Admin", email_admin, passwordCriptata, "ADMIN", studioId],
-            (err) => {
+            ["Admin", email_admin, passwordCriptata, "admin", studioId],
+            async (err, resultUtente) => {
               if (err) {
                 console.error("Errore durante la creazione dell'utente admin:", err);
                 return res.status(500).json({ error: "Errore del server" });
               }
 
-              // Genera il token JWT
-              const token = generaTokenUtente(studioId);
+              const utenteId = resultUtente.insertId;
 
-              // Risposta
+              // ✅ Ora possiamo generare il token
+              const token = generaTokenUtente(utenteId, studioId);
+
+              // Risposta finale
               res.status(201).json({
                 id: studioId,
                 nome,
