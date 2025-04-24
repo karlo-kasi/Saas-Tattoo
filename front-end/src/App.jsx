@@ -5,8 +5,9 @@ import { BrowserRouter, Route, Routes } from "react-router-dom"
 import loginPage from "./pages/loginPage"
 import Dashboard from "./pages/Dashboard"
 import Clienti from "./pages/Clienti"
-import Calendar from "./pages/Calendar"
+import Calendar from "./pages/PaginaCalendario"
 import Appuntamenti from "./pages/Appuntamenti"
+
 
 //componenti
 import ProtectedRoute from "./components/ProtectedRoute"
@@ -15,7 +16,6 @@ import ProtectedRoute from "./components/ProtectedRoute"
 import MainLayout from "./layout/MainLayout"
 
 function App() {
-
   return (
 
     <BrowserRouter>
