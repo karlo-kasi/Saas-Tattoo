@@ -10,7 +10,8 @@ const { deleteClient } = require("../controllers/clientiStudio/deleteController"
 const { getMe } = require("../controllers/clientiStudio/showStudioContorller")
 const { getDashboardKPI } = require("../controllers/clientiStudio/getDashboardKPI")
 const { getCalendar } = require("../controllers/clientiStudio/calendarController/getCalendarController")
-
+const { postNewAppuntamento } = require("../controllers/clientiStudio/appuntamentiControllers/postNewAppuntament")
+const { putAppuntamento } = require("../controllers/clientiStudio/appuntamentiControllers/putAppuntament")
 
 router.post("/register", registerStudio)
 
@@ -28,6 +29,14 @@ router.get("/kpi", verificaToken, getDashboardKPI)
 // rotta per il calendario
 
 router.get("/calendar", verificaToken, getCalendar)
+
+//rotte per gli appuntmaneti
+
+router.post("/newappuntamento", verificaToken, postNewAppuntamento)
+
+router.put("/modifyappuntamento/:id", verificaToken, putAppuntamento)
+
+// rotta per i clienti
 
 router.get("/clienti", verificaToken, getClienti)
 
