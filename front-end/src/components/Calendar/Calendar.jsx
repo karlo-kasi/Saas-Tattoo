@@ -76,7 +76,7 @@ export default function Calendar() {
   };
 
   return (
-    <div className="p-4">
+    <div className="p-6">
       <div className="bg-white border border-gray-200 p-4 rounded-t-xl shadow-md flex items-center justify-between">
         <CalendarHeader
           currentView={currentView}
