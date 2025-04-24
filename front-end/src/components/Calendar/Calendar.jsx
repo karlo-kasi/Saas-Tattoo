@@ -1,5 +1,6 @@
 // Entry point che include le viste e lo switch tra esse
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import CalendarHeader from "./CalendarHeader";
 import MonthView from "./MonthView";
 import WeekView from "./WeekView";
@@ -7,8 +8,33 @@ import DayView from "./DayView";
 import YearView from "./YearView";
 
 export default function Calendar() {
+
+  useEffect(() => {
+    const token = localStorage.getItem("token"); // Recupera il token da localStorage
+    if (!token) {
+      console.error("Token is missing");
+      return;
+    }
+
+    axios
+      .get("http://localhost:3000/api/app/calendar", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setAppuntamenti(response.data); // Imposta i dati ricevuti
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
+
+  const [appuntamenti, setAppuntamenti] = useState([]);
   const [currentView, setCurrentView] = useState("month");
   const [selectedDate, setSelectedDate] = useState(new Date());
+
+  console.log(appuntamenti);
 
   const renderView = () => {
     switch (currentView) {
