@@ -12,6 +12,7 @@ const { getDashboardKPI } = require("../controllers/clientiStudio/getDashboardKP
 const { getCalendar } = require("../controllers/clientiStudio/calendarController/getCalendarController")
 const { postNewAppuntamento } = require("../controllers/clientiStudio/appuntamentiControllers/postNewAppuntament")
 const { putAppuntamento } = require("../controllers/clientiStudio/appuntamentiControllers/putAppuntament")
+const { detailsAppuntament } = require("../controllers/clientiStudio/appuntamentiControllers/detailsAppuntament")
 
 router.post("/register", registerStudio)
 
@@ -32,7 +33,11 @@ router.get("/calendar", verificaToken, getCalendar)
 
 //rotte per gli appuntmaneti
 
+router.get("/appuntamento/:id", verificaToken, detailsAppuntament)
+
 router.post("/newappuntamento", verificaToken, postNewAppuntamento)
+
+
 
 router.put("/modifyappuntamento/:id", verificaToken, putAppuntamento)
 
