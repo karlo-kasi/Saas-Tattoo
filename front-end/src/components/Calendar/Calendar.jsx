@@ -13,11 +13,35 @@ export default function Calendar() {
   const renderView = () => {
     switch (currentView) {
       case "year":
-        return <YearView onSelectDate={(date) => { setSelectedDate(date); setCurrentView("day"); }} />;
+        return (
+          <YearView
+            currentDate={selectedDate} // Passa la currentDate
+            onSelectDate={(date) => {
+              setSelectedDate(date);
+              setCurrentView("day");
+            }}
+          />
+        );
       case "month":
-        return <MonthView onSelectDate={(date) => { setSelectedDate(date); setCurrentView("day"); }} currentDate={selectedDate} />;
+        return (
+          <MonthView
+            onSelectDate={(date) => {
+              setSelectedDate(date);
+              setCurrentView("day");
+            }}
+            currentDate={selectedDate}
+          />
+        );
       case "week":
-        return <WeekView currentDate={selectedDate} onSelectDate={(date) => { setSelectedDate(date); setCurrentView("day"); }} />;
+        return (
+          <WeekView
+            currentDate={selectedDate}
+            onSelectDate={(date) => {
+              setSelectedDate(date);
+              setCurrentView("day");
+            }}
+          />
+        );
       case "day":
         return <DayView date={selectedDate} />;
       default:
@@ -26,15 +50,15 @@ export default function Calendar() {
   };
 
   return (
-    <div className="p-4 max-w-7xl mx-auto">
-      <div className="bg-gray-50 p-4 rounded-t-xl shadow-md flex items-center justify-between">
+    <div className="p-4">
+      <div className="bg-white border border-gray-200 p-4 rounded-t-xl shadow-md flex items-center justify-between">
         <CalendarHeader
           currentView={currentView}
           setCurrentView={setCurrentView}
           setSelectedDate={setSelectedDate}
         />
       </div>
-      <div className="border rounded-b-xl shadow-md overflow-hidden">
+      <div className="rounded-b-xl shadow-md overflow-hidden">
         {renderView()}
       </div>
     </div>

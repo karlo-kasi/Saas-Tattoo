@@ -24,17 +24,17 @@ export default function DayView({ date }) {
   return (
     <div className="flex h-full">
       <div className="w-3/4">
-        <div className="text-lg font-semibold px-4 py-2 border-b bg-white">
+        <div className="text-lg font-semibold px-4 py-2 border-l border-r border-b border-gray-300 bg-white">
           {format(date, "EEEE, MMMM d, yyyy")}
         </div>
         <div className="divide-y h-[calc(100vh-150px)] overflow-y-auto">
           {hours.map((hour) => (
             <div
               key={hour}
-              className="h-16 px-4 py-2 cursor-pointer hover:bg-gray-100 relative"
+              className="h-16 px-4 py-2 cursor-pointer border-gray-300 hover:bg-gray-100 relative"
               onClick={() => handleHourClick(hour)}
             >
-              <div className="text-xs text-gray-500 absolute left-1 top-2">{hour}:00</div>
+              <div className="text-xs px-3 text-gray-500 absolute left-1 top-2">{hour}:00</div>
               {events
                 .filter((e) => e.time.getHours() === hour)
                 .map((e, i) => (
@@ -47,7 +47,7 @@ export default function DayView({ date }) {
         </div>
       </div>
 
-      <div className="w-1/4 border-l p-4 bg-gray-50 hidden lg:block">
+      <div className="w-1/4 border-gray-200 p-4 bg-gray-50 hidden lg:block">
         <div className="text-center font-medium mb-2">Mini calendar</div>
         {/* Qui potrai aggiungere un mini calendar futuro */}
       </div>
@@ -61,7 +61,7 @@ export default function DayView({ date }) {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Event title"
-              className="w-full border px-3 py-2 mb-4 rounded"
+              className="w-full border  px-3 py-2 mb-4 rounded"
             />
             <div className="flex justify-end gap-2">
               <button
