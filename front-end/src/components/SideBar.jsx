@@ -8,7 +8,8 @@ import {
     PieChart,
     Settings,
     Menu,
-    ChevronLeft
+    ChevronLeft,
+    CalendarCheck
 } from "lucide-react";
 
 
@@ -37,7 +38,7 @@ export default function Sidebar({ isOpen, setIsOpen }) {
                     <NavLinkItem to="/dashboard" icon={<Home size={23} />} label="Dashboard" isOpen={isOpen} />
                     <NavLinkItem to="/clienti" icon={<Users size={23} />} label="Clienti" isOpen={isOpen} />
                     <NavLinkItem to="/calendario" icon={<Calendar size={23} />} label="Calendario" isOpen={isOpen} />
-                    <NavLinkItem to="/documenti" icon={<FileText size={23} />} label="Documenti" isOpen={isOpen} />
+                    <NavLinkItem to="/appuntamenti" icon={<CalendarCheck size={23} />} label="Appuntamenti" isOpen={isOpen} />
                     <NavLinkItem to="/report" icon={<PieChart size={23} />} label="Report" isOpen={isOpen} />
                 </nav>
             </div>
