@@ -9,6 +9,7 @@ const { modifyClient } = require("../controllers/clientiStudio/modifyController"
 const { deleteClient } = require("../controllers/clientiStudio/deleteController")
 const { getMe } = require("../controllers/clientiStudio/showStudioContorller")
 const { getDashboardKPI } = require("../controllers/clientiStudio/getDashboardKPI")
+const { getCalendar } = require("../controllers/clientiStudio/calendarController/getCalendarController")
 
 
 router.post("/register", registerStudio)
@@ -23,6 +24,10 @@ router.post("/login", loginStudio)
 router.get("/user/", verificaToken, getMe)
 
 router.get("/kpi", verificaToken, getDashboardKPI)
+
+// rotta per il calendario
+
+router.get("/calendar", verificaToken, getCalendar)
 
 router.get("/clienti", verificaToken, getClienti)
 
