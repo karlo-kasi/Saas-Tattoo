@@ -4,50 +4,57 @@ export default function CalendarHeader({ currentView, setCurrentView, setSelecte
   const today = new Date();
 
   return (
-    <div className="flex flex-wrap items-center gap-2 w-full">
-      <div className="flex items-center gap-2">
-        <button
-          onClick={() => setSelectedDate(prev => subMonths(prev, 1))}
-          className="px-2 py-1 border rounded hover:bg-gray-100"
-        >
-          ←
-        </button>
+    <div className="mb-4 w-full">
+      <h2 className="text-xl py-3 font-semibold text-gray-800 mb-2">Calendario</h2>
 
-        <button
-          onClick={() => setSelectedDate(today)}
-          className="px-3 py-1 border rounded hover:bg-gray-100"
-        >
-          Today
-        </button>
+      {/* Riga superiore: navigazione + mese */}
+      <div className="flex justify-between items-center flex-wrap gap-4">
+        <div className="flex items-center gap-2">
+          <div className="ml-2 font-semibold text-base text-gray-700">
+            {format(today, "MMMM yyyy")}
+          </div>
+        </div>
+        <div className="flex justify-end gap-2">
+          <button
+            onClick={() => setSelectedDate(prev => subMonths(prev, 1))}
+            className="px-2 py-1 bg-gray-200 rounded text-gray-800 hover:bg-gray-300"
+          >
+            ←
+          </button>
 
-        <button
-          onClick={() => setSelectedDate(prev => addMonths(prev, 1))}
-          className="px-2 py-1 border rounded hover:bg-gray-100"
-        >
-          →
-        </button>
+          <button
+            onClick={() => setSelectedDate(today)}
+            className="px-2 py-1.5 text-sm bg-gray-200 rounded text-gray-800 hover:bg-gray-300"
+          >
+            Oggi
+          </button>
+
+          <button
+            onClick={() => setSelectedDate(prev => addMonths(prev, 1))}
+            className="px-2 py-1 bg-gray-200 rounded text-gray-800 hover:bg-gray-300"
+          >
+            →
+          </button>
+          <select
+            className="px-2 py-1.5 text-sm bg-gray-200 rounded text-gray-800"
+            value={currentView}
+            onChange={(e) => setCurrentView(e.target.value)}
+          >
+            <option value="year">Anno</option>
+            <option value="month">Mese</option>
+            <option value="week">Settimana</option>
+            <option value="day">Giorno</option>
+          </select>
+
+          <button className="bg-indigo-600 text-sm text-white px-4 py-1.5 rounded hover:bg-indigo-700">
+            Aggiungi evento
+          </button>
+        </div>
       </div>
 
-      <div className="ml-4 font-semibold text-lg">
-        {format(today, "MMMM yyyy")}
-      </div>
+      {/* Riga separata: selettore e aggiungi evento, allineati a destra */}
 
-      <div className="ml-auto flex items-center gap-2">
-        <select
-          className="border px-2 py-1 rounded"
-          value={currentView}
-          onChange={(e) => setCurrentView(e.target.value)}
-        >
-          <option value="year">Year view</option>
-          <option value="month">Month view</option>
-          <option value="week">Week view</option>
-          <option value="day">Day view</option>
-        </select>
-
-        <button className="bg-indigo-600 text-white px-4 py-1 rounded hover:bg-indigo-700">
-          Add event
-        </button>
-      </div>
     </div>
   );
 }
+

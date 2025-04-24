@@ -26,24 +26,24 @@ export default function WeekView({ currentDate, onSelectDate }) {
 
   return (
     <div className="overflow-auto h-[calc(100vh-150px)]">
-      <div className="grid grid-cols-8 border-b bg-white">
-        <div className="text-center font-semibold text-sm py-2 border-r bg-gray-50">Time</div>
+      <div className="grid grid-cols-8 border-b border-gray-200 bg-white">
+        <div className="text-center font-semibold text-sm py-2 border-r border-gray-200">Time</div>
         {days.map((day, i) => (
-          <div key={i} className="text-center font-semibold text-sm py-2 border-r">
+          <div key={i} className="text-center font-semibold text-sm py-2 border-r border-gray-200">
             {format(day, "EEE d")}
           </div>
         ))}
       </div>
 
       {hours.map((hour) => (
-        <div key={hour} className="grid grid-cols-8 border-b h-16">
-          <div className="text-xs text-gray-500 text-center py-1 border-r bg-gray-50">{hour}:00</div>
+        <div key={hour} className="grid grid-cols-8 border-b border-gray-200 h-16">
+          <div className="text-xs text-gray-500 py-2 text-center py-1 border-r border-gray-200 bg-gray-50">{hour}:00</div>
           {days.map((day, i) => {
             const dayEvents = events.filter(e => isSameDay(e.time, day) && e.time.getHours() === hour);
             return (
               <div
                 key={i}
-                className="relative border-r hover:bg-gray-100 cursor-pointer"
+                className="relative border-r border-gray-200 hover:bg-gray-100 cursor-pointer"
                 onClick={() => handleSlotClick(day, hour)}
               >
                 {dayEvents.map((e, idx) => (

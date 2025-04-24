@@ -1,4 +1,4 @@
-import { startOfMonth, endOfMonth, startOfWeek, endOfWeek, addDays, isSameMonth, isSameDay, format } from "date-fns";
+import { startOfMonth, endOfMonth, startOfWeek, endOfWeek, addDays, isSameMonth, isToday, format } from "date-fns";
 
 export default function MonthView({ currentDate, onSelectDate }) {
   const monthStart = startOfMonth(currentDate);
@@ -6,52 +6,55 @@ export default function MonthView({ currentDate, onSelectDate }) {
   const startDate = startOfWeek(monthStart);
   const endDate = endOfWeek(monthEnd);
 
-  const rows = [];
-  let days = [];
+  const days = [];
   let day = startDate;
-  let formattedDate = "";
 
   while (day <= endDate) {
     for (let i = 0; i < 7; i++) {
-      formattedDate = format(day, "d");
+      const formattedDate = format(day, "d");
       const cloneDay = day;
       days.push(
         <div
-          className={`h-24 border p-1 text-sm cursor-pointer relative hover:bg-gray-100 transition ${
-            !isSameMonth(day, monthStart) ? "bg-gray-50 text-gray-400" : "bg-white"
-          }`}
           key={day}
           onClick={() => onSelectDate(cloneDay)}
+          className={`h-28 p-2 text-sm cursor-pointer border border-gray-200 transition ${
+            !isSameMonth(day, monthStart)
+              ? "bg-gray-50 text-gray-400"
+              : "bg-white hover:bg-gray-50"
+          }`}
         >
-          <div className={`font-medium w-6 h-6 text-center rounded-full ${
-            isSameDay(day, new Date()) ? "bg-indigo-600 text-white" : "text-gray-700"
-          }`}>
-            {formattedDate}
+          <div className="flex justify-end">
+            <div
+              className={`w-6 h-6 text-center text-xs font-medium leading-6 rounded-full ${
+                isToday(day) ? "bg-indigo-600 text-white" : "text-gray-700"
+              }`}
+            >
+              {formattedDate}
+            </div>
           </div>
         </div>
       );
       day = addDays(day, 1);
     }
-    rows.push(
-      <div className="grid grid-cols-7" key={day}>
-        {days}
-      </div>
-    );
-    days = [];
   }
 
   const weekdays = Array.from({ length: 7 }).map((_, idx) => (
-    <div key={idx} className="text-center text-xs font-semibold text-gray-500 py-1">
+    <div
+      key={idx}
+      className="text-center text-xs font-medium text-gray-500 py-3 border-b border-gray-200 bg-white"
+    >
       {format(addDays(startOfWeek(new Date()), idx), "EEE")}
     </div>
   ));
 
   return (
-    <div className="bg-white">
-      <div className="grid grid-cols-7 border-t border-b py-1">
+    <div className="w-full border border-gray-200 bg-white shadow overflow-hidden">
+      <div className="grid grid-cols-7">
         {weekdays}
       </div>
-      <div>{rows}</div>
+      <div className="grid grid-cols-7 border-t border-gray-200">
+        {days}
+      </div>
     </div>
   );
 }
