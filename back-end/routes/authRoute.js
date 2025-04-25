@@ -14,6 +14,7 @@ const { postNewAppuntamento } = require("../controllers/clientiStudio/appuntamen
 const { putAppuntamento } = require("../controllers/clientiStudio/appuntamentiControllers/putAppuntament")
 const { detailsAppuntament } = require("../controllers/clientiStudio/appuntamentiControllers/detailsAppuntament")
 const {patchAppuntamento} = require("../controllers/clientiStudio/appuntamentiControllers/patchAppuntament")
+const { deleteAppuntamento } = require("../controllers/clientiStudio/appuntamentiControllers/deleteAppuntamento")
 
 router.post("/register", registerStudio)
 
@@ -41,6 +42,8 @@ router.post("/newappuntamento", verificaToken, postNewAppuntamento)
 router.patch("/stateappuntmaneto/:id", verificaToken, patchAppuntamento)
 
 router.put("/modifyappuntamento/:id", verificaToken, putAppuntamento)
+
+router.delete("/deleteappuntamento/:id", verificaToken, deleteAppuntamento)
 
 
 // rotta per i clienti
