@@ -1,5 +1,8 @@
 import { useState } from "react";
 import { startOfWeek, addDays, format, setHours, setMinutes, isSameDay } from "date-fns";
+import { it } from "date-fns/locale";
+
+const capitalize = (string) => string.charAt(0).toUpperCase() + string.slice(1);
 
 export default function WeekView({ currentDate, onSelectDate }) {
   const [events, setEvents] = useState([]);
@@ -27,10 +30,10 @@ export default function WeekView({ currentDate, onSelectDate }) {
   return (
     <div className="overflow-auto h-[calc(100vh-150px)]">
       <div className="grid grid-cols-8 border-b border-gray-200 bg-white">
-        <div className="text-center font-semibold text-sm py-2 border-r border-gray-200">Time</div>
+        <div className="text-center font-semibold text-sm py-2 border-r border-gray-200">Orario</div>
         {days.map((day, i) => (
           <div key={i} className="text-center font-semibold text-sm py-2 border-r border-gray-200">
-            {format(day, "EEE d")}
+            {capitalize(format(day, "EEE", { locale: it }))} {format(day, "d")}
           </div>
         ))}
       </div>
