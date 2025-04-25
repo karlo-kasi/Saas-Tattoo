@@ -9,6 +9,10 @@ import YearView from "./YearView";
 
 export default function Calendar() {
 
+  const [appuntamenti, setAppuntamenti] = useState([]);
+  const [currentView, setCurrentView] = useState("month");
+  const [selectedDate, setSelectedDate] = useState(new Date());
+
   useEffect(() => {
     const token = localStorage.getItem("token"); // Recupera il token da localStorage
     if (!token) {
@@ -29,10 +33,6 @@ export default function Calendar() {
         console.error("Error fetching data:", error);
       });
   }, []);
-
-  const [appuntamenti, setAppuntamenti] = useState([]);
-  const [currentView, setCurrentView] = useState("month");
-  const [selectedDate, setSelectedDate] = useState(new Date());
 
   console.log(appuntamenti);
 
@@ -80,6 +80,7 @@ export default function Calendar() {
       <div className="bg-white border border-gray-200 p-4 rounded-t-xl shadow-md flex items-center justify-between">
         <CalendarHeader
           currentView={currentView}
+          selectedDate={selectedDate}
           setCurrentView={setCurrentView}
           setSelectedDate={setSelectedDate}
         />

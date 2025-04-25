@@ -1,22 +1,24 @@
-import { format, addMonths, subMonths } from "date-fns";
+import { format } from "date-fns";
 
-export default function CalendarHeader({ currentView, setCurrentView, setSelectedDate }) {
+export default function CalendarHeader({ currentView, setCurrentView, selectedDate, setSelectedDate }) {
   const today = new Date();
 
   return (
     <div className="mb-4 w-full">
       <h2 className="text-xl py-3 font-semibold text-gray-800 mb-2">Calendario</h2>
 
-      {/* Riga superiore: navigazione + mese */}
       <div className="flex justify-between items-center flex-wrap gap-4">
         <div className="flex items-center gap-2">
-          <div className="ml-2 font-semibold text-base text-gray-700">
-            {format(today, "MMMM yyyy")}
-          </div>
-        </div>
+  <div className="ml-2 font-semibold text-base text-gray-700 min-w-[120px]">
+    {selectedDate ? format(selectedDate, "MMMM yyyy") : ""}
+  </div>
+</div>
+
         <div className="flex justify-end gap-2">
           <button
-            onClick={() => setSelectedDate(prev => subMonths(prev, 1))}
+            onClick={() =>
+              setSelectedDate((prev) => new Date(prev.getFullYear(), prev.getMonth() - 1, 1))
+            }
             className="px-2 py-1 bg-gray-200 rounded text-gray-800 hover:bg-gray-300"
           >
             ←
@@ -30,11 +32,14 @@ export default function CalendarHeader({ currentView, setCurrentView, setSelecte
           </button>
 
           <button
-            onClick={() => setSelectedDate(prev => addMonths(prev, 1))}
+            onClick={() =>
+              setSelectedDate((prev) => new Date(prev.getFullYear(), prev.getMonth() + 1, 1))
+            }
             className="px-2 py-1 bg-gray-200 rounded text-gray-800 hover:bg-gray-300"
           >
             →
           </button>
+
           <select
             className="px-2 py-1.5 text-sm bg-gray-200 rounded text-gray-800"
             value={currentView}
@@ -51,9 +56,6 @@ export default function CalendarHeader({ currentView, setCurrentView, setSelecte
           </button>
         </div>
       </div>
-
-      {/* Riga separata: selettore e aggiungi evento, allineati a destra */}
-
     </div>
   );
 }
