@@ -1,29 +1,68 @@
-import { format } from "date-fns";
+import { format, addDays, subDays, addWeeks, subWeeks, addMonths, subMonths, addYears, subYears } from "date-fns";
+import { it } from "date-fns/locale";
+
+// Funzione per capitalizzare la prima lettera
+const capitalize = (string) => string.charAt(0).toUpperCase() + string.slice(1);
 
 export default function CalendarHeader({ currentView, setCurrentView, selectedDate, setSelectedDate }) {
   const today = new Date();
 
-  return (
-    <div className="mb-4 w-full">
-      <h2 className="text-xl py-3 font-semibold text-gray-800 mb-2">Calendario</h2>
+  const handlePrevious = () => {
+    setSelectedDate((prev) => {
+      switch (currentView) {
+        case "year":
+          return subYears(prev, 1); // Vai indietro di un anno
+        case "month":
+          return subMonths(prev, 1); // Vai indietro di un mese
+        case "week":
+          return subWeeks(prev, 1); // Vai indietro di una settimana
+        case "day":
+          return subDays(prev, 1); // Vai indietro di un giorno
+        default:
+          return prev;
+      }
+    });
+  };
 
+  const handleNext = () => {
+    setSelectedDate((prev) => {
+      switch (currentView) {
+        case "year":
+          return addYears(prev, 1); // Vai avanti di un anno
+        case "month":
+          return addMonths(prev, 1); // Vai avanti di un mese
+        case "week":
+          return addWeeks(prev, 1); // Vai avanti di una settimana
+        case "day":
+          return addDays(prev, 1); // Vai avanti di un giorno
+        default:
+          return prev;
+      }
+    });
+  };
+
+  return (
+    <div className="w-full">
+      <h2 className="text-xl py-3 font-semibold text-gray-800 mb-2">Calendario</h2>
       <div className="flex justify-between items-center flex-wrap gap-4">
         <div className="flex items-center gap-2">
-  <div className="ml-2 font-semibold text-base text-gray-700 min-w-[120px]">
-    {selectedDate ? format(selectedDate, "MMMM yyyy") : ""}
-  </div>
-</div>
+          <div className="text-xl font-bold text-black min-w-[120px]">
+            {selectedDate
+              ? capitalize(format(selectedDate, currentView === "year" ? "yyyy" : currentView === "month" ? "MMMM yyyy" : currentView === "week" ? "MMMM yyyy" : "d MMMM yyyy", { locale: it }))
+              : ""}
+          </div>
+        </div>
 
         <div className="flex justify-end gap-2">
+          {/* Pulsante Precedente */}
           <button
-            onClick={() =>
-              setSelectedDate((prev) => new Date(prev.getFullYear(), prev.getMonth() - 1, 1))
-            }
+            onClick={handlePrevious}
             className="px-2 py-1 bg-gray-200 rounded text-gray-800 hover:bg-gray-300"
           >
             ←
           </button>
 
+          {/* Pulsante Oggi */}
           <button
             onClick={() => setSelectedDate(today)}
             className="px-2 py-1.5 text-sm bg-gray-200 rounded text-gray-800 hover:bg-gray-300"
@@ -31,15 +70,15 @@ export default function CalendarHeader({ currentView, setCurrentView, selectedDa
             Oggi
           </button>
 
+          {/* Pulsante Successivo */}
           <button
-            onClick={() =>
-              setSelectedDate((prev) => new Date(prev.getFullYear(), prev.getMonth() + 1, 1))
-            }
+            onClick={handleNext}
             className="px-2 py-1 bg-gray-200 rounded text-gray-800 hover:bg-gray-300"
           >
             →
           </button>
 
+          {/* Selettore della vista */}
           <select
             className="px-2 py-1.5 text-sm bg-gray-200 rounded text-gray-800"
             value={currentView}
@@ -50,13 +89,10 @@ export default function CalendarHeader({ currentView, setCurrentView, selectedDa
             <option value="week">Settimana</option>
             <option value="day">Giorno</option>
           </select>
-
-          <button className="bg-indigo-600 text-sm text-white px-4 py-1.5 rounded hover:bg-indigo-700">
-            Aggiungi evento
-          </button>
         </div>
       </div>
     </div>
   );
 }
+
 
