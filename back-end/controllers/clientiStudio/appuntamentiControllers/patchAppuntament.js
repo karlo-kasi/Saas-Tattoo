@@ -18,7 +18,7 @@ const patchAppuntamento = (req, res) => {
     const { stato } = req.body
 
     // Validazione del valore di "stato"
-    const statiValidi = ["COMPLETATO", "ANNULLATO", "IN_CORSO"];
+    const statiValidi = ["COMPLETATO", "ANNULLATO", "PROGRAMMATO"];
     if (!statiValidi.includes(stato)) {
         return res.status(400).json({ error: `Stato non valido. Valori accettati: ${statiValidi.join(", ")}` });
     }
