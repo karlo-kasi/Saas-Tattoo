@@ -1,11 +1,13 @@
-import { useState } from "react";
-import { startOfWeek, addDays, format, setHours, setMinutes, isSameDay } from "date-fns";
+import { useEffect, useState } from "react";
+import { startOfWeek, addDays, setHours, setMinutes, isSameDay, format, parseISO } from "date-fns";
 import { it } from "date-fns/locale";
+import axios from "axios";
 
 const capitalize = (string) => string.charAt(0).toUpperCase() + string.slice(1);
 
 export default function WeekView({ currentDate, onSelectDate }) {
   const [events, setEvents] = useState([]);
+  const [appointments, setAppointments] = useState([]); // Stato per gli appuntamenti dal database
   const [showModal, setShowModal] = useState(false);
   const [selectedDayHour, setSelectedDayHour] = useState(null);
   const [title, setTitle] = useState("");
@@ -13,6 +15,30 @@ export default function WeekView({ currentDate, onSelectDate }) {
   const weekStart = startOfWeek(currentDate, { weekStartsOn: 1 });
   const days = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
   const hours = Array.from({ length: 24 }, (_, i) => i);
+
+  useEffect(() => {
+    const fetchAppointments = async () => {
+      try {
+        const token = localStorage.getItem("token"); // Recupera il token da localStorage
+        if (!token) {
+          console.error("Token is missing");
+          return;
+        }
+        const response = await axios.get("http://localhost:3000/api/app/calendar", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        console.log("Dati ricevuti:", response.data); // Verifica i dati ricevuti
+        setAppointments(Array.isArray(response.data) ? response.data : []); // Imposta un array vuoto se la risposta non è un array
+      } catch (error) {
+        console.error("Errore nel recupero degli appuntamenti:", error);
+        setAppointments([]); // Imposta un array vuoto in caso di errore
+      }
+    };
+
+    fetchAppointments();
+  }, []);
 
   const handleSlotClick = (day, hour) => {
     setSelectedDayHour({ day, hour });
@@ -42,19 +68,29 @@ export default function WeekView({ currentDate, onSelectDate }) {
         <div key={hour} className="grid grid-cols-8 border-b border-gray-200 h-16">
           <div className="text-xs text-gray-500 py-2 text-center py-1 border-r border-gray-200 bg-gray-50">{hour}:00</div>
           {days.map((day, i) => {
-            const dayEvents = events.filter(e => isSameDay(e.time, day) && e.time.getHours() === hour);
+            // Filtra gli appuntamenti per il giorno e l'ora corrente
+            const dayAppointments = appointments.filter(
+              (appointment) =>
+                isSameDay(parseISO(appointment.data_appuntamento), day) &&
+                parseISO(appointment.data_appuntamento).getHours() === hour
+            );
+
             return (
               <div
                 key={i}
                 className="relative border-r border-gray-200 hover:bg-gray-100 cursor-pointer"
                 onClick={() => handleSlotClick(day, hour)}
               >
-                {dayEvents.map((e, idx) => (
+                {dayAppointments.map((appointment, idx) => (
                   <div
                     key={idx}
-                    className="absolute top-1 left-1 right-1 bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded"
+                    className="absolute top-1 left-1 right-1 bg-indigo-500 text-white text-xs px-2 py-1 rounded truncate"
+                    title={`${appointment.cliente_nome}: ${format(
+                      parseISO(appointment.data_appuntamento),
+                      "HH:mm"
+                    )} (${appointment.durata_minuti} minuti)`}
                   >
-                    {e.title}
+                    {appointment.cliente_nome}
                   </div>
                 ))}
               </div>
@@ -63,31 +99,30 @@ export default function WeekView({ currentDate, onSelectDate }) {
         </div>
       ))}
 
+      {/* Modale per aggiungere eventi */}
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-          <div className="bg-white p-4 rounded shadow w-80">
-            <h2 className="text-lg font-bold mb-2">
-              Add Event @ {selectedDayHour?.hour}:00 on {format(selectedDayHour?.day, "MMMM d, yyyy")}
-            </h2>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white p-4 rounded shadow-lg w-96">
+            <h2 className="text-lg font-semibold mb-4">Aggiungi evento</h2>
             <input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="Event title"
-              className="w-full border px-3 py-2 mb-4 rounded"
+              placeholder="Titolo evento"
+              className="w-full border border-gray-300 rounded px-3 py-2 mb-4"
             />
             <div className="flex justify-end gap-2">
               <button
                 onClick={() => setShowModal(false)}
-                className="px-3 py-1 border rounded"
+                className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
               >
-                Cancel
+                Annulla
               </button>
               <button
                 onClick={handleAddEvent}
-                className="bg-indigo-600 text-white px-3 py-1 rounded"
+                className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
               >
-                Add
+                Salva
               </button>
             </div>
           </div>
